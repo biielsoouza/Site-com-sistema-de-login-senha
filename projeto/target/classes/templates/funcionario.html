@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+	
+	<script type="text/javascript">
+function Atualizar(){
+	  
+	  var url = "http://localhost:8888/api/funcput";
+
+	  var data = {};
+        respCod = document.getElementById("codfunc").value;
+	  	respNome = document.getElementById("nome").value;
+	  	respData = document.getElementById("datanasc").value;
+	  	respSalario = document.getElementById("salario").value;
+	  	respCargo = document.getElementById("cargo").value;
+	  	respCpf = document.getElementById("cpf").value;
+	  	
+	  	data.codfunc = respCod;
+	  	data.nome = respNome;
+	  	data.data = respData;
+	  	data.salario = respSalario;
+	  	data.cargo = respCargo;
+	  	data.cpf = respCpf;
+	  	  
+	  	
+	  var json = JSON.stringify(data);
+
+	  var xhr = new XMLHttpRequest();
+	  xhr.open("PUT", url);
+	  xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+	  xhr.onload = function () {
+	  	var users = JSON.parse(xhr.responseText);
+	  	if (xhr.readyState == 4 && xhr.status == "200") {
+	  		console.table(users);
+	  		alert("Atualizado com sucesso!");
+	  	} else {
+	  		console.error(users);
+	  		alert("Não foi possivel atualizar!");
+	  	}
+	  }
+	  xhr.send(json);
+	  
+	  
+  };
+  
+  function Cadastrar(){
+	  var data = {};
+        respCod = document.getElementById("codfunc").value;
+	  	respNome = document.getElementById("nome").value;
+	  	respData = document.getElementById("datanasc").value;
+	  	respSalario = document.getElementById("salario").value;
+	  	respCargo = document.getElementById("cargo").value;
+	  	respCpf = document.getElementById("cpf").value;
+	    
+	  	data.codfunc = respCod;
+	  	data.nome = respNome;
+	  	data.data = respData;
+	  	data.salario = respSalario;
+	  	data.cargo = respCargo;
+	  	data.cpf = respCpf;
+	  	
+	var json = JSON.stringify(data); 
+	var xhr = new XMLHttpRequest();
+	
+  	xhr.open("POST", "http://localhost:8888/api/funcpost/",true);
+  	xhr.setRequestHeader("Content-Type", "application/json");
+  	xhr.setRequestHeader("Cache-Control", "no-cache");
+
+  	xhr.onload = function () {
+	  	var users = JSON.parse(xhr.responseText);
+	  	if (xhr.readyState == 4 && xhr.status == "201") {
+	  		console.table(users);
+	  		alert("Salvo com sucesso!");
+	  	} else {
+	  		console.error(users);
+	  		alert("Não foi possivel salvar!");
+	  	}
+	  }
+	   
+	  	xhr.send(json); 
+	  
+	  };
+  
+	  function Consultar() {
+		  	var data = null;
+		  	var xhr = new XMLHttpRequest();
+		  	xhr.onreadystatechange = function () {
+		          if(xhr.readyState === XMLHttpRequest.DONE) {
+		              console.log(xhr.status);
+		              if (xhr.status == 200)
+		              	{
+		              	console.log(this.responseText);
+		            	    if (this.responseText)
+		            	    	showFuncionario(this.responseText); 	
+		              	}
+		              else
+		              	{
+		              		showFuncionario(xhr.status);
+		              	}
+		          }
+		      };
+
+		  	xhr.open("GET", "http://localhost:8888/api/funcget/" + document.getElementById("codfunc").value);
+		  	xhr.setRequestHeader("Content-Type", "application/json");
+		  	xhr.setRequestHeader("Cache-Control", "no-cache");
+		  	xhr.send(data);
+		  };
+	  
+	  function Excluir() {
+		  	var data = null;
+
+		  	var xhr = new XMLHttpRequest();
+		  	
+		  	xhr.onreadystatechange = function () {
+		          if(xhr.readyState === XMLHttpRequest.DONE) {
+		              console.log(xhr.status);
+		              if (xhr.status == 200)
+		              	{
+		              	console.log(this.responseText);
+		            	    if (this.responseText)
+		            	    	showFuncionario(this.responseText);
+		              	
+		              	}
+		              else
+		              	{
+		            	  alert("Excluido com sucesso!");
+		            	  document.getElementById("codfunc").value = "";
+		            	  document.getElementById("nome").value = "";
+		            	  document.getElementById("datanasc").value = "";
+		            	  document.getElementById("salario").value = "";
+		            	  document.getElementById("cargo").value = "";
+		                  document.getElementById("cpf").value = "";
+		            	    
+		              	}
+		          }
+		      };
+		  	
+		  	
+		  	xhr.open("DELETE", "http://localhost:8888/api/funcdelete/" + document.getElementById("codfunc").value);
+		  	xhr.setRequestHeader("Content-Type", "application/json");
+		  	xhr.setRequestHeader("Cache-Control", "no-cache");
+		  	xhr.send(data);
+		  };
+		  
+		  
+		  
+		  
+		  function showFuncionario(responseText)
+		  {
+		  	func = JSON.parse(responseText);
+		  
+		  	if(func==null) {
+		  		alert("Nada Encontrado!")
+		  	  document.getElementById("codfunc").value = "";
+          	  document.getElementById("nome").value = "";
+          	  document.getElementById("datanasc").value = "";
+          	  document.getElementById("salario").value = "";
+          	  document.getElementById("cargo").value = "";
+              document.getElementById("cpf").value = "";
+          	    
+		  		
+		  	}else{
+		  	respCod = document.getElementById("codfunc");
+		  	respNome = document.getElementById("nome");
+		  	respData = document.getElementById("datanasc");
+		  	respSalario = document.getElementById("salario");
+		  	respCargo = document.getElementById("cargo");
+		  	respCpf = document.getElementById("cpf");
+		  	
+
+		  	 respCod.value =  func.codfunc; 
+		     respNome.value = func.nome;
+		     respData.value = func.data;
+		     respSalario.value = func.salario;
+		     respCargo.value = func.cargo;
+		     respCpf.value = func.cpf;
+		  
+		  	}
+		  }
+	  
+	  </script>
+  
+  
+	<link rel="stylesheet" type="text/css" href="stylefunc.css">
+	<meta charset=utf-8 />
+	<title>FUNCIONARIO</title>
+	
+	</head>
+	
+		<body>
+			<div id="loginbox">
+				<div id="loginboxinterno">
+					<div id="loginboxlabel">Consulta de Funcionario</div>
+						
+						<div class="input-div">
+							<input id="codfunc" type="text" placeholder="Código Funcionario"/> 
+						</div>
+						<div class="input-div">
+							<input id="nome" type="text" placeholder="Nome do Funcionario"/> 
+						</div>
+						<div class="input-div">
+							<input id="datanasc" type="text" placeholder="Data"/> 
+						</div>	
+						<div class="input-div">
+							<input id="salario" type="text" placeholder="Salario"/> 
+						</div>
+						<div class="input-div">
+							<input id="cargo" type="text" placeholder="Cargo"/> 
+						</div>
+						<div class="input-div">
+							<input id="cpf" type="text" placeholder="CPF"/> 
+						</div>
+						
+						
+						
+						<div id="botoes">
+							<div onclick="Cadastrar()" id="botao1">Cadastrar</div>
+							<div onclick="Consultar()" id="botao1">Consultar</div>
+							<div onclick="Atualizar()" id="botao1">Atualizar</div>
+							<div onclick="Excluir()" id="botao1">Excluir</div>
+						</div>		
+				</div>
+			</div>
+		
+		</body>
+
+</html>

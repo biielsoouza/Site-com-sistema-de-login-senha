@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+	
+	<link rel="stylesheet" type="text/css" href="stylevend.css">
+	<meta charset=utf-8 />
+	<title>VENDEDOR</title>
+	 <meta charset="utf-8" />
+ 
+  
+  <script type="text/javascript">
+  function Atualizar(){
+	  
+	  var url = "http://localhost:8888/api/vendasput";
+
+	  var data = {};
+      respCod = document.getElementById("codvenda").value;
+	  	respQtd = document.getElementById("quantidade").value;
+	  	respdata = document.getElementById("datavenda").value;
+	  	respCodigopdt = document.getElementById("codpdt").value;
+	  	respValor = document.getElementById("valortotal").value; 
+	  	
+	  	data.cod = respCod;
+	    data.qnt = respQtd;
+	    data.datavenda = respdata;
+	    data.codpdt = respCodigopdt;
+	    data.valortotal = respValor;  
+	  	
+	  var json = JSON.stringify(data);
+
+	  var xhr = new XMLHttpRequest();
+	  xhr.open("PUT", url);
+	  xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+	  xhr.onload = function () {
+	  	var users = JSON.parse(xhr.responseText);
+	  	if (xhr.readyState == 4 && xhr.status == "200") {
+	  		console.table(users);
+	  	} else {
+	  		console.error(users);
+	  	}
+	  }
+	  xhr.send(json);
+	  
+	  
+  };
+  
+  
+ 
+  
+  function Consultar() {
+  	var data = null;
+  	var xhr = new XMLHttpRequest();
+  	xhr.onreadystatechange = function () {
+          if(xhr.readyState === XMLHttpRequest.DONE) {
+              console.log(xhr.status);
+              if (xhr.status == 200)
+              	{
+              	console.log(this.responseText);
+            	    if (this.responseText)
+            	    	showVendas(this.responseText); 	
+              	}
+              else
+              	{
+              		showVendas(xhr.status);
+              	}
+          }
+      };
+
+  	xhr.open("GET", "http://localhost:8888/api/vendasget/" + document.getElementById("codvenda").value);
+  	xhr.setRequestHeader("Content-Type", "application/json");
+  	xhr.setRequestHeader("Cache-Control", "no-cache");
+  	xhr.send(data);
+  	
+  	
+  	
+  };
+  
+  function Cadastrar(){
+	  var data = {};
+        respCod = document.getElementById("codvenda").value;
+	  	respQtd = document.getElementById("quantidade").value;
+	  	respdata = document.getElementById("datavenda").value;
+	  	respCodigopdt = document.getElementById("codpdt").value;
+	  	respValor = document.getElementById("valortotal").value; 
+	  	
+	  	data.cod = respCod;
+	    data.qnt = respQtd;
+	    data.datavenda = respdata;
+	    data.codpdt = respCodigopdt;
+	    data.valortotal = respValor;  
+	    
+	    var json = JSON.stringify(data);
+	var xhr = new XMLHttpRequest();
+  	xhr.open("POST", "http://localhost:8888/api/vendaspost");
+  	xhr.setRequestHeader("Content-Type", "application/json");
+  	xhr.setRequestHeader("Cache-Control", "no-cache");
+
+	  xhr.onload = function () {
+	  	var users = JSON.parse(xhr.responseText);
+	  	if (xhr.readyState == 4 && xhr.status == "201") {
+	  		console.table(users);
+	  		alert("Salvo com sucesso!");
+	  	} else {
+	  		console.error(users);
+	  		alert("Não foi possivel salvar!");
+	  	}
+	  }
+	  xhr.send(json);
+	  };
+	  
+  
+  function Excluir() {
+	  	var data = null;
+
+	  	var xhr = new XMLHttpRequest();
+	  	
+	  	xhr.onreadystatechange = function () {
+	          if(xhr.readyState === XMLHttpRequest.DONE) {
+	              console.log(xhr.status);
+	              if (xhr.status == 200)
+	              	{
+	              	console.log(this.responseText);
+	            	    if (this.responseText)
+	            	    	showVendas(this.responseText);
+	              	
+	              	}
+	              else
+	              	{
+	            	  alert("Excluido com sucesso!");
+	                  document.getElementById("codvenda").value = "";
+	          	  	  document.getElementById("quantidade").value = "";
+	          	  	  document.getElementById("datavenda").value = "";
+	          	      document.getElementById("codpdt").value = "";
+	          	      document.getElementById("valortotal").value = ""; 
+	              	}
+	          }
+	      };
+
+	  	xhr.open("DELETE", "http://localhost:8888/api/vendasdelete/" + document.getElementById("codvenda").value);
+	  	xhr.setRequestHeader("Content-Type", "application/json");
+	  	xhr.setRequestHeader("Cache-Control", "no-cache");
+	  	xhr.send(data);
+	  };
+	  
+  
+  
+  
+
+  function showVendas(responseText)
+  {
+	  
+  	vendas = JSON.parse(responseText);		
+  	
+  	if(vendas == null){
+  		alert("Nada Encontrado!");
+  		 document.getElementById("codvenda").value = "";
+ 	  	  document.getElementById("quantidade").value = "";
+ 	  	  document.getElementById("datavenda").value = "";
+ 	      document.getElementById("codpdt").value = "";
+ 	      document.getElementById("valortotal").value = "";
+  		
+  	}else{
+  	
+  	respCod = document.getElementById("codvenda");
+  	respQtd = document.getElementById("quantidade");
+  	respdata = document.getElementById("datavenda");
+  	respCodigopdt = document.getElementById("codpdt");
+  	respValor = document.getElementById("valortotal");
+  	
+  	respQtd.value = vendas.qnt;
+  	respdata.value = vendas.datavenda;
+  	respCodigopdt.value = vendas.codpdt;
+  	respValor.value = vendas.valortotal;
+  	  }
+  
+  	}
+  
+  function showStatus(httpStatus)
+  {
+  	respId = document.getElementById("resp");
+  	respId.innerHTML = "HTTP status:" + httpStatus;
+  }
+  </script>
+	
+	</head>
+	
+		<body>
+			<div id="loginbox">
+				<div id="loginboxinterno">
+					<div id="loginboxlabel">Consulta</div>	
+						<div class="input-div">
+							<input type="text" id="codvenda" placeholder="Código Venda"/> 
+						</div>
+						<div class="input-div">
+							<input type="text" id="quantidade" placeholder="Quantidade"/> 
+						</div>
+						<div class="input-div">
+							<input type="text" id="datavenda" placeholder="Data Venda"/> 
+						</div>
+						<div class="input-div">
+							<input id="codpdt" type="text" placeholder="Código Produto"/> 	
+						</div>
+						<div class="input-div">
+							<input type="text" id="valortotal" placeholder="Valor Total"/>
+						</div>
+						<div id="botoes">
+						    <div id="botao1" onclick="Cadastrar()">Cadastrar</div>
+							<div id="botao1" onclick="Consultar()" >Consultar</div>
+							<div id="botao1" onclick="Atualizar()">Atualizar</div>
+							<div id="botao1" onclick="Excluir()">Excluir</div>
+
+						</div>		
+				</div>
+			</div>
+		
+		</body>
+
+</html>

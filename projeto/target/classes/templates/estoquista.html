@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+
+<html>
+
+	<head>
+    <meta charset="utf-8" />	
+    <script type="text/javascript">
+  
+    function Atualizar(){
+  	  
+  	  var url = "http://localhost:8888/api/estoqueput";
+
+  	  var data = {};
+  	    respCod = document.getElementById("txtcodprod").value;
+  	    respNome = document.getElementById("nome").value;
+  	  	respQtd = document.getElementById("quantidade").value;
+  	  	respValor = document.getElementById("valor").value;
+  	  	respValidade = document.getElementById("validade").value;
+
+  	  	data.cod = respCod;
+  	    data.nome = respNome;
+  	  	data.qnt = respQtd;
+  	    data.valor = respValor;
+  	    data.vali = respValidade; 
+  	  	
+  	  var json = JSON.stringify(data);
+
+  	  var xhr = new XMLHttpRequest();
+  	  xhr.open("PUT", url);
+  	  xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+  	  xhr.onload = function () {
+  	  	var users = JSON.parse(xhr.responseText);
+  	  	if (xhr.readyState == 4 && xhr.status == "200") {
+  	  		console.table(users);
+  	  		alert("Atualizado com sucesso")
+  	  	} else {
+  	  		console.error(users);
+  	  		alert("Não foi possível atualizar!");
+  	  	}
+  	  }
+  	  xhr.send(json);
+  	  
+  	  
+    };
+    
+    function Cadastrar(){
+  	  var data = {};
+         respCod = document.getElementById("txtcodprod").value;
+  	  	 respNome = document.getElementById("nome").value;
+         respQtd = document.getElementById("quantidade").value;
+  	  	 respValor = document.getElementById("valor").value;
+  	  	 respValidade = document.getElementById("validade").value;
+
+  	  	data.cod = respCod;
+  	  	data.nome = respNome;
+  	    data.qnt = respQtd;
+  	    data.valor = respValor;
+  	    data.vali = respValidade;
+  	        
+  	var json = JSON.stringify(data); 
+  	var xhr = new XMLHttpRequest();
+  	
+    	xhr.open("POST", "http://localhost:8888/api/estoquepost/",true);
+    	xhr.setRequestHeader("Content-Type", "application/json");
+    	xhr.setRequestHeader("Cache-Control", "no-cache");
+
+    	xhr.onload = function () {
+  	  	var users = JSON.parse(xhr.responseText);
+  	  	if (xhr.readyState == 4 && xhr.status == "201") {
+  	  		console.table(users);
+  	  		alert("Salvo com sucesso!");
+  	  	} else {
+  	  		console.error(users);
+  	  		alert("Não foi possivel salvar!");
+  	  	}
+  	  }
+  	   
+  	  	xhr.send(json); 
+  	  
+  	  };
+    
+    function Consultar() {
+    	var data = null;
+
+    	var xhr = new XMLHttpRequest();
+    	
+    	xhr.onreadystatechange = function () {
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+                console.log(xhr.status);
+                if (xhr.status == 200)
+                	{
+                	console.log(this.responseText);
+              	    if (this.responseText)
+              	    	showEstoque(this.responseText);
+                	
+                	}
+                else
+                	{
+                		showStatus(xhr.status);
+                	}
+            }
+        };
+
+    	xhr.open("GET", "http://localhost:8888/api/estoqueget/" + document.getElementById("txtcodprod").value);
+    	xhr.setRequestHeader("Content-Type", "application/json");
+    	xhr.setRequestHeader("Cache-Control", "no-cache");
+    	xhr.send(data);
+    };
+
+    
+    function Excluir() {
+  	  	var data = null;
+
+  	  	var xhr = new XMLHttpRequest();
+  	  	
+  	  	xhr.onreadystatechange = function () {
+  	          if(xhr.readyState === XMLHttpRequest.DONE) {
+  	              console.log(xhr.status);
+  	              if (xhr.status == 200)
+  	              	{
+  	              	console.log(this.responseText);
+  	            	    if (this.responseText)
+  	            	    	showEstoque(this.responseText);
+  	            	 
+  	              	}
+  	              else
+  	              	{
+  	            	  
+  	            	    alert("Excluido com sucesso!");
+  	            	     document.getElementById("txtcodprod").value = "";
+  	            	     document.getElementById("nome").value = "";
+  	            		 document.getElementById("quantidade").value="";
+  	            		 document.getElementById("valor").value="";
+  	            	     document.getElementById("validade").value="";
+  	            	    
+  	            	    showStatus(xhr.status);
+  	              
+  	              	
+  	              	}
+  	          }
+  	      };
+
+  	  	xhr.open("DELETE", "http://localhost:8888/api/estoquedelete/" + document.getElementById("txtcodprod").value);
+  	  	xhr.setRequestHeader("Content-Type", "application/json");
+  	  	xhr.setRequestHeader("Cache-Control", "no-cache");
+  	  	xhr.send(data);
+  	  };
+    
+  	  
+    function showEstoque(responseText)
+    {
+    	estoque = JSON.parse(responseText);
+    	
+    	if(estoque==null){
+    		alert("Nada Encontrado!");
+    	     document.getElementById("txtcodprod").value = "";
+    	     document.getElementById("nome").value = "";
+  		     document.getElementById("quantidade").value="";
+  		     document.getElementById("valor").value="";
+  	         document.getElementById("validade").value="";
+    	}else{	
+    	respNome = document.getElementById("nome");	
+    	respQtd = document.getElementById("quantidade");
+    	respValor = document.getElementById("valor");
+    	respVali = document.getElementById("validade");
+    	
+    	respNome.value = estoque.nome;
+    	respQtd.value = estoque.qnt;
+    	respValor.value = estoque.valor;
+    	respVali.value = estoque.vali;
+    	}
+    
+    }
+    
+    function showStatus(httpStatus)
+    {
+    	respId = document.getElementById("resp");
+    	resp.innerHTML = "HTTP status:" + httpStatus;
+    }
+    
+    
+    </script>
+    
+	<link rel="stylesheet" type="text/css" href="styleestoc.css">
+	<meta charset=utf-8 />
+	<title>ESTOQUISTA</title>
+	
+	</head>
+	
+		<body>
+			<div id="loginbox">
+				<div id="loginboxinterno">
+					<div id="loginboxlabel">Cadastro/Consulta</div>
+						
+				    	<div class="input-div">
+						<input type="text" id="txtcodprod" placeholder="Cód Prod"/> 
+						</div>
+						<div class="input-div">
+							<input type="text" id="nome" placeholder="Nome do Item"/> 
+						</div>
+						<div class="input-div">
+							<input type="text" id="quantidade" placeholder="Quantidade"/> 
+						</div>
+
+						<div class="input-div">
+							<input type="text" id="validade" placeholder="Validade"/> 
+						</div>
+			
+						<div class="input-div">
+							<input type="text" id="valor" placeholder="Preço Unitário"/> 
+						</div>
+						
+						<div id="botoes">
+							<div id="botao1" onclick="Consultar()"> Consulta</div>
+							<div id="botao2" onclick="Cadastrar()"> Incluir</div>
+							<div id="botao3" onclick="Excluir()">Excluir</div>
+							<div id="botao4" onclick="Atualizar()">Alterar</div>
+		
+						</div>		
+				</div>
+			</div>
+		
+		</body>
+
+</html>
